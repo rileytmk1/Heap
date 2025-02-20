@@ -1,11 +1,10 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
-#include <vector>
-#include <cmath>
 
 using namespace std;
 
+//  function prototypes
 void insert(int n, int* &heap, int &c);
 void print(int* &heap, int &c, int l, int r);
 void remove_root(int* &heap, int &c);
@@ -15,11 +14,11 @@ void sort_down(int* &heap, int i, int &c);
 
 int main()
 {
-  int *heap = new int[100];
+  int *heap = new int[100]; // initialize heap as a array of ints
   char input [10];
-  int c = 0;
-  cout << "ADD, DELETE, or PRINT" << endl;
+  int c = 0; //initialize size of heap
   while (strcmp(input, "QUIT") != 0){
+    cout << "ADD, DELETE, OR PRINT?" << endl;
     cin.get(input, 10);
     cin.get();
     if (strcmp(input, "ADD") == 0){
@@ -40,6 +39,7 @@ int main()
 	int num;
 	while (inputFile >> num){
 	  insert(num, heap, c);
+	  cout << "Added " << num << endl;
 	}
 	inputFile.close();
       }
@@ -55,10 +55,10 @@ int main()
       cin.get(input3,10);
       cin.get();
       if (strcmp(input3, "r") == 0){
-	remove_root(heap, c);
+4	remove_root(heap, c);
       }
       else if (strcmp(input3, "a") == 0){
-	while (c != 0){
+	while (c != 0){ //continuously remove root until heap is empty
 	  remove_root(heap, c);
 	}
       }
@@ -70,19 +70,20 @@ int main()
 void sort_up(int* &heap, int i)
 {
   
-  if (i == 0){
+  if (i == 0){ // base case: stop when at the root
     return;
   }
   else{
     int parent = (i-1)/2;
-    if (heap[parent] < heap[i]){
+    if (heap[parent] < heap[i]){ // check if current number is greater than its parent
+      // swap child and parent
       int temp = heap[parent];
       heap[parent] = heap[i];
       heap[i] = temp;
       i = parent;
-      sort_up(heap, i);
+      sort_up(heap, i); // continue sorting with new parent
     }
-    else{
+    else{ //stop when parent is larger than its child
       return;
     }
   }
@@ -92,25 +93,31 @@ void sort_down(int* &heap, int i, int &c)
 {
   int left = (i*2) + 1;
   int right = (i*2) + 2;
-  if (left >= c || right >= c){
+  if (left > c || right > c){ // reached a leaf
     return;
   }
-  if (heap[left] > heap[right]){
+
+  // check which child is larger
+  if (heap[left] > heap[right]){ //swap left child with current position
+    int temp = heap[i];
     heap[i] = heap[left];
-    i = left;
+    heap[left] = temp;
+    i = left; // set new position to continue sorting down from 
   }
-  if (heap[right] > heap[left]){
+  if (heap[right] > heap[left]){ //swap right child with current position
+    int temp2 = heap[i];
     heap[i] = heap[right];
-    i = right;
+    heap[right] = temp2;
+    i = right; //set new position to continue sorting from
   }
   sort_down(heap, i, c);
 }
 
 void insert (int n, int* & heap, int &c)
 {
-  heap[c] = n;
-  int i = c;
-  sort_up(heap, i);
+  heap[c] = n; // set empty spot to number to be added
+  int i = c; // set i to current position
+  sort_up(heap, i); // sort up the heap
   c++;
 }
 
@@ -135,9 +142,9 @@ void print(int* &heap, int &c, int i, int depth = 0)
 void remove_root(int* &heap, int &c)
 {
   cout << "Removed " << heap[0] << endl;
-  heap[0] = heap[c-1];
-  c--;
-  sort_down(heap, 0, c);
+  heap[0] = heap[c-1]; //set root to last number in the heap
+  c--; //shrink heap size by 1
+  sort_down(heap, 0, c); //sort down the tree
 }
 
 
