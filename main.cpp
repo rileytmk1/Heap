@@ -7,7 +7,7 @@
 using namespace std;
 
 void insert(int n, int* &heap, int &c);
-void print(int* &heap, int &c);
+void print(int* &heap, int &c, int l, int r);
 void remove_root(int* &heap, int &c);
 void sort_up(int* &heap, int i);
 void sort_down(int* &heap, int i, int &c);
@@ -34,10 +34,19 @@ int main()
 	cin.ignore();
 	insert(n, heap, c);
       }
+
+      else if (strcmp(input2, "f") == 0){
+	ifstream inputFile("nums.txt");
+	int num;
+	while (inputFile >> num){
+	  insert(num, heap, c);
+	}
+	inputFile.close();
+      }
             
     }
     else if (strcmp(input, "PRINT") == 0) {
-      print(heap, c);
+      print(heap, c, 0, 0);
     }
 
     else if (strcmp(input, "DELETE") == 0){
@@ -46,8 +55,7 @@ int main()
       cin.get(input3,10);
       cin.get();
       if (strcmp(input3, "r") == 0){
-	
-remove_root(heap, c);
+	remove_root(heap, c);
       }
       else if (strcmp(input3, "a") == 0){
 	while (c != 0){
@@ -84,20 +92,18 @@ void sort_down(int* &heap, int i, int &c)
 {
   int left = (i*2) + 1;
   int right = (i*2) + 2;
-  if (left > c || right > c){
+  if (left >= c || right >= c){
     return;
   }
   if (heap[left] > heap[right]){
     heap[i] = heap[left];
     i = left;
-    sort_down(heap, i, c);
   }
   if (heap[right] > heap[left]){
     heap[i] = heap[right];
     i = right;
-
-    sort_down(heap,i, c);
   }
+  sort_down(heap, i, c);
 }
 
 void insert (int n, int* & heap, int &c)
@@ -108,22 +114,30 @@ void insert (int n, int* & heap, int &c)
   c++;
 }
 
-void print(int* &heap, int &c)
+void print(int* &heap, int &c, int i, int depth = 0)
 {
-  for (int i = 0; i < c; i++){
-    cout << heap[i] << " ";
-  }
-  cout << endl;
-  
 
-  
+  if (i >= c){
+    return;
+  }
+
+  print(heap,c, 2*i + 2, depth + 1);
+
+  for (int j = 0; j < depth; j++){
+    cout << "   ";
+  }
+  cout << heap[i] << endl;
+
+  print(heap, c, 2*i +1, depth + 1);
+
 }
 
 void remove_root(int* &heap, int &c)
 {
   cout << "Removed " << heap[0] << endl;
-  sort_down(heap, 0, c);
+  heap[0] = heap[c-1];
   c--;
+  sort_down(heap, 0, c);
 }
 
 
