@@ -55,7 +55,7 @@ int main()
       cin.get(input3,10);
       cin.get();
       if (strcmp(input3, "r") == 0){
-4	remove_root(heap, c);
+	remove_root(heap, c);
       }
       else if (strcmp(input3, "a") == 0){
 	while (c != 0){ //continuously remove root until heap is empty
@@ -124,17 +124,18 @@ void insert (int n, int* & heap, int &c)
 void print(int* &heap, int &c, int i, int depth = 0)
 {
 
-  if (i >= c){
+  if (i >= c){ //stop when index is larger than size of tree
     return;
   }
-
+  // recursively call print on the right subtree
   print(heap,c, 2*i + 2, depth + 1);
 
-  for (int j = 0; j < depth; j++){
+  for (int j = 0; j < depth; j++){ //print indents based on current depth
     cout << "   ";
   }
-  cout << heap[i] << endl;
+  cout << heap[i] << endl; //ouput the value
 
+  // recursively call print on the left subtree
   print(heap, c, 2*i +1, depth + 1);
 
 }
